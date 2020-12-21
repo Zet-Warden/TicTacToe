@@ -17,12 +17,14 @@ public class MyController implements MouseListener, ActionListener {
 
     private Clip moveFx;
     private Clip endSound;
+    private Clip noSound;
 
     public MyController(MyGUI gui, MyGame game) {
         this.gui = gui;
         this.game = game;
         animationCtr = 0;
         setSound();
+        noSound.start();
         winAnimationTimer = new Timer(500, this);
         drawAnimationTimer = new Timer(500, this);
         aiNotify = new Timer(100, this);
@@ -53,11 +55,10 @@ public class MyController implements MouseListener, ActionListener {
                     for(int j = 0; j < game.getBoard()[i].length; j++)
                         boardCopy[i][j] = game.getBoard()[i][j];
 
-                //System.out.println(ai.getAvailableSlots(boardCopy).length);
-                System.out.println(ai.miniMax(boardCopy, 0, true));
-
+                System.out.println("Evaluation: " + ai.miniMax(boardCopy, 0, true));
+                /*loadMoveFx();
+                moveFx.start();*/
                 game.move(ai.getBestPosition()[0], ai.getBestPosition()[1]);
-                //aiNotify.stop();
                 checkWin();
                 checkDraw();
             }
@@ -69,6 +70,7 @@ public class MyController implements MouseListener, ActionListener {
         if(e.getSource() == gui.getBoard() && !game.hasWinner() && !game.isDraw() ) {
             if(game.getCurrentPlayer().equals("Human")) {
                 loadMoveFx();
+                //moveFx.setMicrosecondPosition(10000);
                 moveFx.start();
                 game.move(gui.getBoard().toRowIndex(e.getY()), gui.getBoard().toColIndex(e.getX()));
                 checkWin();
@@ -146,16 +148,21 @@ public class MyController implements MouseListener, ActionListener {
     }
 
     public void setSound() {
-        String moveFxName ="src\\bloop.wav"; //sound when a marker is placed on the board
+        //String moveFxName ="src\\bloop.wav"; //sound when a marker is placed on the board
+        String noSoundName = "src\\noSound.wav";
         String endSoundName = "src\\end.wav"; //ending sound whether win/lose
         try {
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(moveFxName).getAbsoluteFile());
+            /*AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(moveFxName).getAbsoluteFile());
             moveFx = AudioSystem.getClip();
-            moveFx.open(audioInputStream);
+            moveFx.open(audioInputStream);*/
 
-            audioInputStream = AudioSystem.getAudioInputStream(new File(endSoundName).getAbsoluteFile());
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(endSoundName).getAbsoluteFile());
             endSound = AudioSystem.getClip();
             endSound.open(audioInputStream);
+
+            audioInputStream = AudioSystem.getAudioInputStream(new File(noSoundName).getAbsoluteFile());
+            noSound = AudioSystem.getClip();
+            noSound.open(audioInputStream);
         } catch(Exception e) {
             System.out.println("Music file for Game: Not Detected");
         }
