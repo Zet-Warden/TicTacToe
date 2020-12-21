@@ -21,6 +21,10 @@ public class MyGUI extends JFrame {
 
     private Font montserrat;
 
+    JButton soundButton;
+    ImageIcon unmuteIcon;
+    ImageIcon muteIcon;
+
     public MyGUI(MyBoard board) {
         super("Tic-Tac-Toe");
         setLayout(new GridBagLayout());
@@ -40,7 +44,6 @@ public class MyGUI extends JFrame {
         montserrat  = montserrat.deriveFont(Font.BOLD, 22);
 
         this.board = board;
-        //this.board.setBackground(Color.black);
         initScreen();
 
         repaint();
@@ -73,6 +76,24 @@ public class MyGUI extends JFrame {
         computerScore.setFont(montserrat);
         computerScore.setForeground(Color.WHITE);
 
+        //ImageIcon unmuteIcon = new MyImage("unmute.png");
+        unmuteIcon = new MyImage(getClass().getResource("unmute.png"));
+        soundButton = new JButton(unmuteIcon);
+
+        muteIcon = new MyImage(getClass().getResource("mute.png"));
+        //soundButton.setRolloverIcon(muteIcon);
+        soundButton.setBorderPainted(false);
+        soundButton.setContentAreaFilled(false);
+        soundButton.setFocusPainted(false);
+        soundButton.setOpaque(false);
+
+        ImageIcon settingsIcon = new MyImage(getClass().getResource("settings.png"));
+        JButton settingsButton = new JButton(settingsIcon);
+        settingsButton.setBorderPainted(false);
+        settingsButton.setContentAreaFilled(false);
+        settingsButton.setFocusPainted(false);
+        settingsButton.setOpaque(false);
+
         /*humanLabel.setBackground(Color.pink);
         computerLabel.setBackground(Color.pink);
         tieLabel.setBackground(Color.pink);
@@ -80,43 +101,57 @@ public class MyGUI extends JFrame {
         tieLabel.setOpaque(true);
         computerLabel.setOpaque(true);*/
 
+        gbc.anchor = GridBagConstraints.PAGE_START;
+        gbc.gridx = 3;
+        gbc.gridy = 0;
+        add(soundButton, gbc);
+
+        gbc.anchor = GridBagConstraints.PAGE_START;
+        gbc.gridx = 3;
+        gbc.gridy = 1;
+        add(settingsButton, gbc);
+
         gbc.gridwidth = 3;
+        gbc.gridheight = 3;
         gbc.gridx = 0;
         gbc.gridy = 0;
         add(board, gbc);
+
 
         //gbc.fill =GridBagConstraints.HORIZONTAL;
         //gbc.anchor = GridBagConstraints.PAGE_START;
         gbc.insets = new Insets(5, 40, 0, 20);
         gbc.gridwidth = 1;
+        gbc.gridheight = 1;
         gbc.gridx = 0;
-        gbc.gridy = 1;
+        gbc.gridy = 3;
         add(humanLabel, gbc);
 
-        gbc.gridy = 2;
+        gbc.gridy = 4;
         add(humanScore, gbc);
 
         gbc.insets = new Insets(5, 75, 0, 0);
         gbc.gridwidth = 1;
         gbc.gridx = 1;
-        gbc.gridy = 1;
+        gbc.gridy = 3;
         add(tieLabel, gbc);
 
-        gbc.gridy = 2;
+        gbc.gridy = 4;
         add(tieScore, gbc);
 
         gbc.insets = new Insets(5, 85, 0, 0);
         gbc.gridwidth = 1;
         gbc.gridx = 2;
-        gbc.gridy = 1;
+        gbc.gridy = 3;
         add(computerLabel, gbc);
 
-        gbc.gridy = 2;
+        gbc.gridy = 4;
         add(computerScore, gbc);
     }
 
     public void setMouseListener(MouseListener listener) {
         board.addMouseListener(listener);
+        soundButton.addMouseListener(listener);
     }
 
     public MyBoard getBoard() {
@@ -145,5 +180,17 @@ public class MyGUI extends JFrame {
 
     public JLabel getComputerScore() {
         return computerScore;
+    }
+
+    public JButton getSoundButton() {
+        return soundButton;
+    }
+
+    public ImageIcon getUnmuteIcon() {
+        return unmuteIcon;
+    }
+
+    public ImageIcon getMuteIcon() {
+        return muteIcon;
     }
 }

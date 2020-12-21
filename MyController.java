@@ -15,9 +15,11 @@ public class MyController implements MouseListener, ActionListener {
     private final Timer aiNotify;
     private int   animationCtr;
 
+    private Clip music;
     private Clip moveFx;
     private Clip endSound;
     private Clip noSound;
+
 
     public MyController(MyGUI gui, MyGame game) {
         this.gui = gui;
@@ -25,6 +27,8 @@ public class MyController implements MouseListener, ActionListener {
         animationCtr = 0;
         setSound();
         noSound.start();
+        music.start();
+        music.loop(Clip.LOOP_CONTINUOUSLY);
         winAnimationTimer = new Timer(500, this);
         drawAnimationTimer = new Timer(500, this);
         aiNotify = new Timer(100, this);
@@ -34,15 +38,25 @@ public class MyController implements MouseListener, ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == winAnimationTimer || e.getSource() == drawAnimationTimer) {
-            if(e.getSource() == winAnimationTimer)
-                gui.getBoard().setIsWinAnimation(animationCtr % 2 == 0);
-            else
-                gui.getBoard().setIsDrawAnimation(animationCtr % 2 == 0);
+            if(animationCtr <= 3) {
+                if (e.getSource() == winAnimationTimer)
+                    gui.getBoard().setIsWinAnimation(animationCtr % 2 == 0);
+                else
+                    gui.getBoard().setIsDrawAnimation(animationCtr % 2 == 0);
+            }
             animationCtr++;
-            if(animationCtr > 3) {
+            if(animationCtr > 5) {
                 winAnimationTimer.stop();
                 drawAnimationTimer.stop();
                 animationCtr = 0;
+
+                /*long start = System.currentTimeMillis();
+                long end = 0;
+                while(end - start != 300) {
+                    end = System.currentTimeMillis();
+                }*/
+                music.start();
+
             }
         }
 
@@ -83,6 +97,25 @@ public class MyController implements MouseListener, ActionListener {
         else if(e.getSource() == gui.getBoard()) {
             reset();
         }
+
+        if(e.getSource() == gui.getSoundButton()) {
+            if(gui.getSoundButton().getIcon() == gui.getMuteIcon()) {
+                gui.getSoundButton().setIcon(gui.getUnmuteIcon());
+                try {
+                    AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("src\\music.wav").getAbsoluteFile());
+                    music = AudioSystem.getClip();
+                    music.open(audioInputStream);
+                } catch (Exception ex) {
+                    System.out.println("Music file for Game: Not Detected");
+                }
+                music.start();
+
+            }
+            else {
+                gui.getSoundButton().setIcon(gui.getMuteIcon());
+                music.close();
+            }
+        }
     }
 
     public void checkWin() {
@@ -104,6 +137,7 @@ public class MyController implements MouseListener, ActionListener {
             endSound.stop();
             endSound.setFramePosition(0);
             endSound.start();
+            music.stop();
         }
     }
 
@@ -118,6 +152,7 @@ public class MyController implements MouseListener, ActionListener {
             endSound.stop();
             endSound.setFramePosition(0);
             endSound.start();
+            music.stop();
         }
     }
 
@@ -132,6 +167,9 @@ public class MyController implements MouseListener, ActionListener {
         gui.getBoard().setIsWinAnimation(false);
         gui.getBoard().setIsDrawAnimation(false);
         endSound.stop();
+        music.start();
+
+        animationCtr = 0;
     }
 
 
@@ -151,6 +189,7 @@ public class MyController implements MouseListener, ActionListener {
         //String moveFxName ="src\\bloop.wav"; //sound when a marker is placed on the board
         String noSoundName = "src\\noSound.wav";
         String endSoundName = "src\\end.wav"; //ending sound whether win/lose
+        String musicName = "src\\music.wav";
         try {
             /*AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(moveFxName).getAbsoluteFile());
             moveFx = AudioSystem.getClip();
@@ -163,6 +202,11 @@ public class MyController implements MouseListener, ActionListener {
             audioInputStream = AudioSystem.getAudioInputStream(new File(noSoundName).getAbsoluteFile());
             noSound = AudioSystem.getClip();
             noSound.open(audioInputStream);
+
+            audioInputStream = AudioSystem.getAudioInputStream(new File(musicName).getAbsoluteFile());
+            music = AudioSystem.getClip();
+            music.open(audioInputStream);
+            //music.loop(Clip.LOOP_CONTINUOUSLY);
         } catch(Exception e) {
             System.out.println("Music file for Game: Not Detected");
         }
