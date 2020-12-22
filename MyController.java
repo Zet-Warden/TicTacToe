@@ -60,7 +60,7 @@ public class MyController implements MouseListener, ActionListener {
 
         //Notifies that it is Ais turn
         if(e.getSource() == aiNotify) {
-            if(!game.hasWinner() && !game.isDraw()) {
+            if(game.getCurrentPlayer().equals("AI") && !game.hasWinner() && !game.isDraw()) {
                 miniMaxAI.setMarker(game.getAI(), game.getHuman());
                 char[][] boardCopy = new char[3][3];
                 for(int i = 0; i < game.getBoard().length; i++)
