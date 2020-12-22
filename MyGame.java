@@ -15,6 +15,11 @@ public class MyGame {
         ai = 'O';
     }
 
+    /**
+     * Places the markers on the board
+     * @param row row index
+     * @param col column index
+     */
     public void move(int row, int col) {
         if((row >= 0 && row <= 2) && (col >= 0 && col <= 2) && board[row][col] == 0 && !hasWinner() && !isDraw()){
             if (currentPlayer.equals("Human")) {
@@ -27,10 +32,16 @@ public class MyGame {
         }
     }
 
+    /**
+     * @return true if getWinner() returns an int[][] corresponding to the winning section
+     */
     public boolean hasWinner() {
         return getWinner() != null;
     }
 
+    /**
+     * @return the winning section of the board
+     */
     public int[][] getWinner() {
         //check for rows and columns
         for(int i = 0; i < 3; i++) {
@@ -48,7 +59,9 @@ public class MyGame {
         return null;
     }
 
-
+    /**
+     * @return true if draw
+     */
     public boolean isDraw() {
         for(int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -59,6 +72,10 @@ public class MyGame {
         return true;
     }
 
+    /**
+     * Resets the board
+     * Switches player
+     */
     public void resetBoard() {
         for(int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++)
