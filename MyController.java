@@ -30,10 +30,9 @@ public class MyController implements MouseListener, ActionListener {
         music.loop(Clip.LOOP_CONTINUOUSLY);
         music.start();
 
-
         winAnimationTimer = new Timer(500, this);
         drawAnimationTimer = new Timer(500, this);
-        aiNotify = new Timer(10, this);
+        aiNotify = new Timer(400, this);
         aiNotify.setRepeats(false);
 
         gui.setMouseListener(this);
@@ -69,6 +68,8 @@ public class MyController implements MouseListener, ActionListener {
                         boardCopy[i][j] = game.getBoard()[i][j];
 
                 System.out.println("Evaluation: " + miniMaxAI.miniMax(boardCopy, 0, true));
+                loadMoveFx();
+                moveFx.start();
                 game.move(miniMaxAI.getBestPosition()[0], miniMaxAI.getBestPosition()[1]);
                 checkWin();
                 checkDraw();
@@ -152,6 +153,8 @@ public class MyController implements MouseListener, ActionListener {
             score = Integer.parseInt(gui.getTieScore().getText());
             score++;
             gui.getTieScore().setText(score + "");
+
+            gui.getBoard().setGameOver(true);
             drawAnimationTimer.start();
             endSound.stop();
             endSound.setFramePosition(0);
@@ -176,6 +179,7 @@ public class MyController implements MouseListener, ActionListener {
         gui.getBoard().setWinSection(null);
         winAnimationTimer.stop();
         drawAnimationTimer.stop();
+        gui.getBoard().setGameOver(false);
         gui.getBoard().setIsWinAnimation(false);
         gui.getBoard().setIsDrawAnimation(false);
         endSound.stop();

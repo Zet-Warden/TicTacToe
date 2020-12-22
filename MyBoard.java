@@ -7,6 +7,7 @@ public class MyBoard extends JPanel {
 
     private final char[][] board;
     private int[][] winningSection;
+    private boolean isGameOver;
     private boolean isWinAnimation;
     private boolean isDrawAnimation;
 
@@ -14,6 +15,7 @@ public class MyBoard extends JPanel {
         setPreferredSize(new Dimension(500, 500));
         setBackground(new Color(0, 0, 20));
         this.board = board;
+        isGameOver = false;
     }
 
     /**
@@ -24,7 +26,7 @@ public class MyBoard extends JPanel {
     public void paintComponent (Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        float thickness = 8f; //thickness of line border
+        float thickness = 12f; //thickness of line border
         g2.setStroke(new BasicStroke(thickness));
         g2.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
 
@@ -43,7 +45,7 @@ public class MyBoard extends JPanel {
 
         thickness = 20f; //thickness of the markers
         g2.setStroke(new BasicStroke(thickness));
-        g2.setColor(Color.WHITE);
+
 
         //sections of the board
         double xSection = width / 3;
@@ -52,6 +54,11 @@ public class MyBoard extends JPanel {
         double offset = (thickness + 30); //area offset
         double rectWidth =  xSection - 2*(offset); //width of the rectangle
         double rectHeight = ySection - 2*(offset); //height of the rectangle
+
+        if(isGameOver)
+            g2.setColor(Color.GRAY);
+        else
+            g2.setColor(Color.WHITE);
 
         for(int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -136,5 +143,10 @@ public class MyBoard extends JPanel {
      */
     public int toColIndex(int posX) {
         return (posX / (getHeight() / 3));
+    }
+
+
+    public void setGameOver(boolean b) {
+        isGameOver = b;
     }
 }
