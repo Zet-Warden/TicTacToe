@@ -51,7 +51,7 @@ public class MyBoard extends JPanel {
         double xSection = width / 3;
         double ySection = height / 3;
 
-        double offset = (thickness + 30); //area offset
+        double offset = (thickness + 33); //area offset
         double rectWidth =  xSection - 2*(offset); //width of the rectangle
         double rectHeight = ySection - 2*(offset); //height of the rectangle
 

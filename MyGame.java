@@ -30,6 +30,9 @@ public class MyGame {
                 currentPlayer = "Human";
             }
         }
+        else {
+            System.out.println("Invalid Move: " + row + " " + col);
+        }
     }
 
     /**

@@ -20,7 +20,11 @@ public class MyController implements MouseListener, ActionListener {
     private Clip moveFx;
     private Clip endSound;
 
+    private final RandomAI randomAI = new RandomAI();
     private final MiniMaxAI miniMaxAI = new MiniMaxAI();
+    private final TortureAI tortureAI = new TortureAI();
+
+    private int level = 0;
 
     public MyController(MyGUI gui, MyGame game) {
         this.gui = gui;
@@ -35,6 +39,7 @@ public class MyController implements MouseListener, ActionListener {
         aiNotify = new Timer(400, this);
         aiNotify.setRepeats(false);
 
+        gui.setActionListener(this);
         gui.setMouseListener(this);
     }
 
@@ -67,13 +72,34 @@ public class MyController implements MouseListener, ActionListener {
                     for(int j = 0; j < game.getBoard()[i].length; j++)
                         boardCopy[i][j] = game.getBoard()[i][j];
 
-                System.out.println("Evaluation: " + miniMaxAI.miniMax(boardCopy, 0, true));
+                //System.out.println("Evaluation: " + miniMaxAI.miniMax(boardCopy, 0, true));
                 loadMoveFx();
                 moveFx.start();
-                game.move(miniMaxAI.getBestPosition()[0], miniMaxAI.getBestPosition()[1]);
+
+                switch(level) {
+                    case 0: randomAI.algorithm(boardCopy);
+                            game.move(randomAI.getBestPosition()[0], randomAI.getBestPosition()[1]);
+                            break;
+                    case 1: tortureAI.algorithm(boardCopy);
+                            game.move(tortureAI.getBestPosition()[0], tortureAI.getBestPosition()[1]);
+                            break;
+                    case 2: miniMaxAI.miniMax(boardCopy, 0, true);
+                            game.move(miniMaxAI.getBestPosition()[0], miniMaxAI.getBestPosition()[1]);
+                            break;
+                }
                 checkWin();
                 checkDraw();
             }
+        }
+
+        if(e.getSource() == gui.getSettingsButton()) {
+            gui.showOptionDialog();
+            if(gui.getRandomAI().isSelected())
+                level = 0;
+            else if(gui.getTortureAI().isSelected())
+                level = 1;
+            else if(gui.getMinimaxAI().isSelected())
+                level = 2;
         }
     }
 
